@@ -1,0 +1,99 @@
+package unzip;
+
+      
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+ 
+public class unzip{
+    public static void main(String[] args) throws IOException {
+    	Scanner sc=new Scanner(System.in);
+    	String inp=sc.next();
+
+   	 String source = "C:\\Users\\nandhini-pt4574\\Downloads\\";
+   	 source+=inp;
+   	 source+=".zip";
+
+   	 //     String destination = "C:\\Users\\nandhini-pt4574\\Desktop;
+     String destination = "C:\\Users\\nandhini-pt4574\\Desktop\\";
+     destination+=inp;
+       
+        	 
+        	 File f1 = new File(destination);    
+       	      if(f1.mkdir()){  
+       	    	unzip(source, destination);
+                System.out.println("done "); 
+       	      }else{  
+       	         System.out.println("Error Found");  
+       	      }  
+       	      	
+             
+             
+    }
+
+    
+	private static void unzip(String source, String destination) throws IOException {
+	     
+
+    ZipInputStream zipInp = new ZipInputStream(new FileInputStream(source));
+       
+    ZipEntry entry = zipInp.getNextEntry();
+
+
+    while (entry != null) {
+    	String str=entry.getName();
+    	 String temp[]=str.split("/");
+    	 
+    	 String tempPath="";
+    	
+    		 tempPath+="/"+temp[temp.length-1];
+    		
+    	 String filePath=destination+tempPath;
+      //  String filePath = destination +"/" + entry.getName();
+    	 
+
+    	 
+    	 if(temp[temp.length-1].contains("jar")) {
+    		 System.out.println(filePath+"\n");
+    		 extractFile(zipInp, filePath);
+    	 }
+        
+        boolean isDir=entry.isDirectory();
+        
+        zipInp.closeEntry();
+        entry = zipInp.getNextEntry();
+       
+    }
+    zipInp.close();
+
+    
+}
+	
+
+	private static void extractFile(ZipInputStream zipInp, String filePath) throws IOException {
+		
+		  final int BUFFER_SIZE = 1024;{
+		  BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(filePath));
+	        byte[] bytesInp = new byte[BUFFER_SIZE];
+	        
+	        
+	        int read = 0;
+	        while ((read = zipInp.read(bytesInp)) != -1) {
+	            out.write(bytesInp, 0, read);
+	        }
+	        
+	        
+	        out.close();
+		
+	}
+		
+	  
+}
+}
